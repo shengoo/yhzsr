@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import SearchStore from '../stores/SearchStore';
 import SearchHistoryItem from './SearchHistoryItem';
+import * as StyleConstants from '../StyleConstants';
 
 export default class SearchHistory extends Component {
     constructor(props) {
@@ -65,8 +66,7 @@ export default class SearchHistory extends Component {
         return (
             <View
                 key={`${sectionID}-${rowID}`}
-                style={{height: adjacentRowHighlighted ? 4 : 1,
-                    backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#CCCCCC',}}
+
             />
         );
     }
@@ -84,12 +84,15 @@ const styles = StyleSheet.create({
     historyContainer: {
         flex: 1,
         // backgroundColor: 'yellow',
-        padding: 10,
+        // padding: 10,
     },
     historyList: {
         // paddingTop:-10,
         // marginTop:-19,
         // backgroundColor: "blue"
+        // borderTopWidth:1,
+        // borderBottomWidth:1,
+        // borderColor: StyleConstants.DEVIDER_COLOR,
     },
     headerText: {
         fontSize: 20,

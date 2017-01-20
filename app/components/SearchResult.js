@@ -9,13 +9,13 @@ import ViewContainer from './ViewContainer'
 import * as SearchActions from '../actions/SearchActions';
 
 class SearchResult extends Component {
-    constructor(props) {
+    constructor(props) {console.log(props)
         super(props)
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             loading: true,
             dataSource: this.ds.cloneWithRows([]),
-        }
+        };
         this.baseurl = 'http://tjyh.sheng00.com/api/checkcode/';
     }
 

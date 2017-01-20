@@ -11,6 +11,8 @@ import SearchForm from '../components/SearchForm';
 import SearchHistory from '../components/SearchHistory';
 import ViewContainer from '../components/ViewContainer';
 
+import * as StyleConstants from '../StyleConstants';
+
 class IndexScreen extends Component{
     constructor(props){
         super(props);
@@ -22,7 +24,7 @@ class IndexScreen extends Component{
 
     render(){
         return(
-            <ViewContainer>
+            <ViewContainer style={{backgroundColor:StyleConstants.BG_COLOR}}>
                 <SearchForm {...this.props} />
                 <SearchHistory {...this.props}/>
             </ViewContainer>

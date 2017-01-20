@@ -1,58 +1,25 @@
 'use strict';
 import React, {Component} from 'react';
-import {StyleSheet, View, TextInput, Button, Text, Switch, AsyncStorage, Alert, TouchableHighlight,PickerIOS} from 'react-native';
+import {StyleSheet, View, TextInput, Button, Text, Switch, AsyncStorage, Alert, TouchableHighlight,ActionSheetIOS, TouchableOpacity,Image} from 'react-native';
 
 import * as SearchActions from '../actions/SearchActions';
 import SearchResult from './SearchResult';
-
-var PickerItemIOS = PickerIOS.Item;
-var CAR_MAKES_AND_MODELS = {
-    amc: {
-        name: 'AMC',
-        models: ['AMX', 'Concord', 'Eagle', 'Gremlin', 'Matador', 'Pacer'],
-    },
-    alfa: {
-        name: 'Alfa-Romeo',
-        models: ['159', '4C', 'Alfasud', 'Brera', 'GTV6', 'Giulia', 'MiTo', 'Spider'],
-    },
-    aston: {
-        name: 'Aston Martin',
-        models: ['DB5', 'DB9', 'DBS', 'Rapide', 'Vanquish', 'Vantage'],
-    },
-    audi: {
-        name: 'Audi',
-        models: ['90', '4000', '5000', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'Q5', 'Q7'],
-    },
-    austin: {
-        name: 'Austin',
-        models: ['America', 'Maestro', 'Maxi', 'Mini', 'Montego', 'Princess'],
-    },
-    borgward: {
-        name: 'Borgward',
-        models: ['Hansa', 'Isabella', 'P100'],
-    },
-    buick: {
-        name: 'Buick',
-        models: ['Electra', 'LaCrosse', 'LeSabre', 'Park Avenue', 'Regal',
-            'Roadmaster', 'Skylark'],
-    },
-    cadillac: {
-        name: 'Cadillac',
-        models: ['Catera', 'Cimarron', 'Eldorado', 'Fleetwood', 'Sedan de Ville'],
-    },
-    chevrolet: {
-        name: 'Chevrolet',
-        models: ['Astro', 'Aveo', 'Bel Air', 'Captiva', 'Cavalier', 'Chevelle',
-            'Corvair', 'Corvette', 'Cruze', 'Nova', 'SS', 'Vega', 'Volt'],
-    },
-};
+import * as StyleConstants from '../StyleConstants';
+var BUTTONS = [
+    '广州',
+    '深圳',
+    '杭州',
+    '天津',
+    '取消',
+];
+var CANCEL_INDEX = 4;
 
 class SearchForm extends Component {
     constructor(props) {
         super(props)
         this.state = {text: '', saveHistory: true,
-            carMake: 'cadillac',
-            modelIndex: 3,};
+            city:'广州'
+        };
         this.handleKeyDown = this.handleKeyDown.bind(this);
     }
 
@@ -81,23 +48,34 @@ class SearchForm extends Component {
         }
     }
 
+    showActionSheet = () => {
+        ActionSheetIOS.showActionSheetWithOptions({
+                options: BUTTONS,
+                cancelButtonIndex: CANCEL_INDEX,
+            },
+            (buttonIndex) => {
+                if(buttonIndex!== CANCEL_INDEX)
+                    this.setState({ city: BUTTONS[buttonIndex] });
+            });
+    };
+
     render() {
 
         return (
             <View style={[styles.container, this.props.style || {}]}>
                 <Text style={styles.headerText}>查询</Text>
                 <View style={styles.form}>
-                    <PickerIOS
-                        selectedValue={this.state.carMake}
-                        onValueChange={(carMake) => this.setState({carMake, modelIndex: 0})}>
-                        {Object.keys(CAR_MAKES_AND_MODELS).map((carMake) => (
-                            <PickerItemIOS
-                                key={carMake}
-                                value={carMake}
-                                label={CAR_MAKES_AND_MODELS[carMake].name}
-                            />
-                        ))}
-                    </PickerIOS>
+                    <View style={styles.cityContainer}>
+                        <Text style={styles.cityLabel}>
+                            选择城市：
+                        </Text>
+                        <TouchableOpacity onPress={this.showActionSheet} style={styles.city}>
+                            <Text style={styles.cityText}>
+                                {this.state.city}
+                            </Text>
+                            <Image source={require('../assets/more.png')} style={{width: 30, height: 30}} />
+                        </TouchableOpacity>
+                    </View>
                     <TextInput
                         style={styles.input}
                         onChangeText={(text) => this.setState({text})}
@@ -141,7 +119,7 @@ const styles = StyleSheet.create({
         alignItems: 'stretch',
         // backgroundColor: '#EFEFF2',
         // backgroundColor: '#fff',
-        marginTop: 64
+        marginTop: 64,
     },
     headerText: {
         fontSize: 20,
@@ -149,6 +127,8 @@ const styles = StyleSheet.create({
         padding: 10
     },
     form: {
+        borderTopWidth:1,borderBottomWidth:1,
+        borderColor: StyleConstants.DEVIDER_COLOR,
         backgroundColor: '#fff',
         flexDirection: 'column',
         justifyContent: 'flex-start',
@@ -156,11 +136,32 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         paddingRight: 20
     },
+    cityContainer:{
+        height:StyleConstants.CELL_HEIGHT,
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'center',
+        marginBottom:10,
+        borderBottomWidth:1,
+        borderColor: StyleConstants.DEVIDER_COLOR,
+    },
+    city:{
+        flex:1,
+        flexDirection:'row',
+        justifyContent:'flex-end',
+        alignItems:'center'
+    },
+    cityLabel: {
+        fontWeight: '500',
+    },
+    cityText:{
+        fontWeight: '500',
+    },
     input: {
         fontSize: 18,
         paddingLeft: 10,
         borderWidth: 1,
-        borderColor: 'lightgray',
+        borderColor: StyleConstants.DEVIDER_COLOR,
         borderRadius: 5,
         color: '#48bbec',
         alignSelf: 'stretch',
@@ -177,7 +178,7 @@ const styles = StyleSheet.create({
     },
     saveButton: {
         height: 49,
-        backgroundColor: '#52D568',
+        backgroundColor: '#10E100',
         marginBottom: 20,
         justifyContent: 'center',
         alignSelf: 'stretch',
